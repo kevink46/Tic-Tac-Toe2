@@ -1,0 +1,161 @@
+import re
+# re (regular expression) specifies a set of strings that matches it.
+# the functions in this module let you check if a particular string matches 
+# a given regular expression
+
+# create data for the fields
+data = [
+    [" (1,1) ", " (1,2) ", " (1,3) "],
+    [" (2,1) ", " (2,2) ", " (2,3) "],
+    [" (3,1) ", " (3,2) ", " (3,3) "],
+]
+
+# create 3x3 list which is at the beginning false, changes to true if a field gets chosen (see
+# def play_round)
+visited = [[False, False, False] for _ in range(3)]
+
+
+def create_field() -> str:
+    """This method creates the field based on the data
+    given on the global data and returns it.
+    Returns:
+        str: The field as string.
+    """
+    field = ""
+    top_line = "||=======||=======||=======||"
+    between_line = "||       ||       ||       ||"
+    for i in range(13):
+        if i == 0 or i == 4 or i == 8 or i == 12:
+            field += top_line
+            field += "\n"
+        elif i == 2:
+            field += get_content_line(data[0])
+            field += "\n"
+        elif i == 6:
+            field += get_content_line(data[1])
+            field += "\n"
+        elif i == 10:
+            field += get_content_line(data[2])
+            field += "\n"
+        else:
+            field += between_line
+            field += "\n"
+    return field
+
+
+def get_content_line(data_row: list) -> str:
+    """This method creates the line of the field with content
+    based on the data given as argument.
+    Args:
+        data list: A particular row of the global data variable.
+    Returns:
+        str: Line of the field that contains content.
+    """
+    content_line = "||"
+    for content in data_row:
+        content_line += content
+        content_line += "||"
+    return content_line
+
+
+def did_player_win(player: str) -> bool:
+    """Checks if a player won the game by checking each row, each col, the main diag and the second diag.
+    Args:
+        player str: Either "   X   " or "   O   ".
+    Returns:
+        bool: Whether the player with the sign given by player won the game or not.
+    """
+
+    # Check for row.
+    for row in range(3):
+        if data[row][0] == data[row][1] == data[row][2] == player:
+            return True
+    # Check for col.
+    for col in range(3):
+        if data[0][col] == data[1][col] == data[2][col] == player:
+            return True
+    # Check for main Diag.
+    if data[0][0] == data[1][1] == data[2][2] == player:
+        return True
+    # Check for second Diag.
+    if data[0][2] == data[1][1] == data[2][0] == player:
+        return True
+    return False
+
+
+def play_round(player: str, player_id: int) -> bool:
+    """Plays a round of the tic tac toe and checks for invalid input.
+    Args:
+        player str: name of the player
+        player_id int: Either 1 or 2, depends on which player's turn is.
+    Returns:
+        bool: True if the input was valid and False otherwise.
+    """
+    # assign a sign to each player
+    sign = "X" if player_id == 1 else "O"
+    # assign pos to where the player wants to position his sign
+    pos = input(f"{player} indicate where you want to place your {sign}, e.g. (2,2): ")
+    # check if input matches a field (if input is valid)
+    if not re.match("\([1-3],[1-3]\)", pos):     
+        print()
+        print("No valid input!")
+        return False
+    # check if field is already taken
+    x = int(pos[1]) - 1
+    y = int(pos[3]) - 1
+    if visited[x][y]:        # if its already taken, the field is True                 
+        print()
+        print("This field is already taken!")
+        return False
+    # replace the data with X or O at the chosen field
+    data[x][y] = "   X   " if player_id == 1 else "   O   "  
+    # change corresponding field to true, only fields with false can be chosen
+    visited[x][y] = True
+    return True
+
+
+def play_game():
+    """Entry point. Just plays the game."""
+    game_over = False
+
+    print("Welcome to the Tic Tac Toe game!")
+    player1 = input("Enter the name of player 1: ")
+    player2 = input("Enter the name of player 2: ")
+
+    round = 0
+    while not game_over and round < 9:
+        field = create_field()
+        print()
+        print(field)
+        # check if player 1 has to play, player 1 plays in round 1, 3,... 
+        if round % 2 == 0:
+            # if its player 1 turn, the play_round gets executed for player 1
+            if not play_round(player1, 1): 
+                continue
+            # check if player 1 has won, if so finish the game, else none
+            game_over = did_player_win("   X   ")
+            winner = 1 if game_over else None
+            # check if player 2 has to play, plays in round 2, 4,...
+        if round % 2 == 1:
+            # if its player 2 turn, the play_round gets executed for player 2
+            if not play_round(player2, 2):  
+                continue
+            #check if player 2 has won, if so finish the game, else none
+            game_over = did_player_win("   O   ")
+            winner = 2 if game_over else None
+        # if neither won, play next round
+        round += 1
+
+    field = create_field()
+    print()
+    print(field)
+    if winner == 1:
+        print(f"Congratulations {player1}! You won!")
+    elif winner == 2:
+        print(f"Congratulations {player2}! You won!")
+    else:
+        print("Nobody won, draw!")
+
+# start the game
+if __name__ == "__main__":
+    play_game()
