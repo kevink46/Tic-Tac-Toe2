@@ -8,13 +8,11 @@ This is a mandatory group project part of the course "Programming - Introduction
 
 The group project was done by Lucien Ledermann (Viper) and Kevin Kaufmann (kevink46).
 
-The coding was done using jupyter notebook and importing pandas and NumPy libraries.
+The coding was done using Spider on Anaconda.
 
-The goal was to give simple analysis tools to a user for a definite file with data from World Bank which was accessed here: https://data.worldbank.org/indicator/NY.ADJ.NNTY.CD
+The goal was to create a simple Tic Tac Toe which is easy to play.
 
-The file was then modified to only cover the last accessible years (2007 - 16) and eliminated pack of countries (European Union etc.) to only have individual countries.
-
-The user can first choose one of the 162 countries and get several information (such as year with max. NNI and its value, year with min. NNI and its value, average of its NNI over 2007-16, median of its NNI over 2007-16, as well as the CAGR of its NNI's development over 2007-16).
+First, Player 1 can enter his name, followed by Player two entering his name. Afterwards, Player 1 begins playing through entering the field he would like to take. It is important that the exact same format is entered as it is used in the field, e.g. (2,2). As soon as Player one entered a field, the code checks wether the input is valid (one of the fields in the correct format). If the input is valid, the chosen field of player 1 gets an X and the code changes the value of the field in a seperate list from False to True. Therefore, from now on only fields which contain the value False can be taken. After player 1 took a field, player to can enter his preferred field. After entering a field, the code once more checks, if the input is valid and this time also checks wether the field is already taken. If the value in the sepe
 
 The user can then choose an individual year (2007-16) to display other information (such as the country with the max. NNI and its value in that year, the country with the min. NNI and its value in that year, the mean NNI value of all countries in that year, as well as the median NNI value of all countries in that year).
 
